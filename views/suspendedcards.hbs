@@ -1,0 +1,106 @@
+{{> header}}
+
+<style>
+  table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  td,
+  th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+
+  .table-responsive {
+    max-height: 300px;
+  }
+
+  .stationBody {
+    min-height: 35vh;
+  }
+  .selected {
+    background-color: lightcoral;
+    color: #FFF;
+  }  
+</style>
+
+  
+
+
+
+
+<div class="container">
+<h1>{{title}}</h1>
+
+{{#if errors}}
+    {{#each errors}}
+        <div class="alert alert-danger">
+        {{this.msg}}
+        </div>
+    {{/each}}
+{{/if}}
+
+</div>
+
+<div class="panel-body table-responsive stationBody">
+<table id="example" class="table table-bordered" cellspacing="0" width="100%">
+    <thead>
+        <tr>
+            <th>Card #
+                <a href="/filtercard"><i class="fa fa-sort-asc" aria-hidden="true"></i></a>
+            </th>
+            <th>New Owner</th>
+            <th>Date Suspended
+                <a href="/filterdateasc"><i class="fa fa-sort-asc" aria-hidden="true"></i></a>
+                <a href="/filterdatedesc"><i class="fa fa-sort-desc" aria-hidden="true"></i></a>
+            </th>
+            <th>Previous Owner</th>
+        </tr>
+    </thead>
+
+    
+    <tbody>
+        {{#each cards}}
+            <tr>
+                <td>{{BreezeCardNum}}</td>
+                <td>{{Username}}</td>
+                <td>{{DateTime}}</td>
+                <td>{{BelongsTo}}</td>
+            </tr>
+        {{/each}}
+    </tbody>
+</table>
+</div>
+<br>
+<center>
+<button type="submit" class="new">Assign Selected Card to New Owner</button> <br> <br>
+<button type="submit" class="prev">Assign Selected Card to Previous Owner</button>
+</center>
+
+<script type="text/javascript">
+
+    $("#example tr:gt(0)").click(function(){
+        $(this).addClass('selected').siblings().removeClass('selected');    
+        var value=$(this).find('td:first').html();
+    });
+
+    $(".new").click(function(){
+        var cx = "/removeConflicts/"
+        var card = $(".selected").find('td:first').html();
+        var newo = $(".selected").find("td").eq(1).html();
+        var ds = $(".selected").find("td").eq(2).html();
+        var preo = $(".selected").find("td").eq(3).html(); 
+        $(location).attr('href', cx + card + "/" + newo + "/" + ds + "/" + preo)
+    }); 
+    $(".prev").click(function(){
+        var cx = "/giveToPrevious/"
+        var card = $(".selected").find('td:first').html();
+        var newo = $(".selected").find("td").eq(1).html();
+        var ds = $(".selected").find("td").eq(2).html();
+        var preo = $(".selected").find("td").eq(3).html();
+        $(location).attr('href', cx + card + "/" + newo + "/" + ds + "/" + preo)
+    }); 
+</script>

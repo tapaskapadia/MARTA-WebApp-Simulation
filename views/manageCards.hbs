@@ -1,0 +1,204 @@
+{{> header }}
+</br>
+<!--- Style for the table -->
+<style>
+  table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  td,
+  th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+
+  .table-responsive {
+    max-height: 300px;
+  }
+
+  .stationBody {
+    min-height: 35vh;
+  }
+</style>
+
+<!--- Potential Error Catching Div -->
+<div id="topDog">
+</div>
+
+<!--- Table -->
+<div class="boxd">
+<div  class="panel-body table-responsive stationBody">
+<table id="tab" class="table table-borded">
+  <thead>
+    <tr>
+      <th>Card Number
+          <a href="/cnasc"><i class="fa fa-sort-asc" aria-hidden="true"></i></a>
+          <a href="/cndesc"><i class="fa fa-sort-desc" aria-hidden="true"></i></a>
+      </th>
+      <th>Value
+          <a href="/valueasc"><i class="fa fa-sort-asc" aria-hidden="true"></i></a>
+          <a href="/valuedesc"><i class="fa fa-sort-desc" aria-hidden="true"></i></a>
+      </th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+      {{#if bloop}}
+      {{#each bloop}}
+      <tr>
+      <td>{{this.BreezecardNum}}</td>
+      <td>{{this.Value}}</td>
+      <td><button class="btnSubmit"> remove</button></td>
+      {{/each}}
+      {{/if}}
+      </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+<!--- Add Card INPUT/BUTTON -->
+<br>
+<div class="boxd">
+<div class="row">
+  <div class="col-lg-offset-3 col-lg-6">
+    <div class="input-group">
+      <input type="text" id="adc" onkeypress="return isNumberKey(event)" class="form-control" placeholder="Breezecard Number">
+      <span class="input-group-btn">
+        <button class="btn btn-secondary btnSubmit2" type="button">Add Card</button>
+      </span>
+    </div>
+  </div>
+</div>
+</div>
+<br>
+
+<!--- Add Value to Breezecard -->
+<div class="boxd">
+<h5>Add Value to Breezecard</h5>
+
+<!--- Error Displaying for Add Value -->
+<div id="errors"> 
+     {{#if bad}}
+     <div class="alert alert-danger" role="alert"><strong>Warning! </strong>{{bad}}</div>
+     {{/if}}
+</div>
+<br>
+
+<!--- Credit Card Span and Input -->
+<div class="row">
+    <div class="col-lg-offset-3 col-lg-6">
+        <div class="input-group">
+            <span class="input-group-addon" id="basic-addon3">Credit Card Number</span>
+            <input type="text" class="form-control" onkeypress="return isNumberKey(event)" id="credit" aria-describedby="basic-addon3">
+        </div>
+    </div>
+</div>
+<br>
+
+<!--- Money Span and Input -->
+<div class="row">
+    <div class="col-lg-offset-3 col-lg-6">
+        <div class="input-group">
+            <span class="input-group-addon" id="basic-addon4">Value</span><span class="input-group-addon" id="basic-addon5">$</span>
+            <input type="number" class="currency form-control" id="money" aria-describedby="basic-addon3">
+        </div>
+    </div>
+</div>
+<br>
+<!--- Add Value Button -->
+<button class="btn btn-secondary adv" type="button">Add Value</button>
+</div>
+<br>
+
+<!--- Highlight Selection JS -->
+<script>
+$("#tab tr:gt(0)").click(function(){
+   $(this).addClass('selected').siblings().removeClass('selected');
+   var value=$(this).find('td:first').html();
+});
+</script>
+
+<!--- Restict Money Input -->
+<script>
+$(function() {
+  $("#money").on('input', function() {
+    this.value = this.value
+      .replace(/[^\d.]/g, '')             // numbers and decimals only
+      .replace(/(^[\d]{4})[\d]/g, '$1')   // not more than 2 digits at the beginning
+      .replace(/(\..*)\./g, '$1')         // decimal can't exist more than once
+      .replace(/(\.[\d]{2})./g, '$1');    // 
+  });
+});
+</script>
+
+<!--- Restict only Number Input -->
+<script language=Javascript>
+      function isNumberKey(evt)
+      {
+         var charCode = (evt.which) ? evt.which : event.keyCode
+         if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+
+         return true;
+      }
+</script>
+
+
+<!--- Add Value button click -->
+<script>
+    $(".adv").click(function(){
+        var cx = "/addMoney/";
+        var bc = $(".selected").find('td:first').html();
+        var mm = document.getElementById("money").value;
+        var cc = document.getElementById("credit").value;
+        console.log(cc);
+        if(!bc || cc.length != 16 || !mm) {
+            $('#errors').html('<div class="alert alert-danger" role="alert"><strong>Warning!</strong> Better check yourself</div>');
+        } else {
+            bc = bc.toString();
+            $(location).attr('href', cx+bc+"/"+mm);
+        }
+    }); 
+</script>
+
+<!--- Remove card button click -->
+<script>
+    $(".btnSubmit").click(function(){
+        var cx = "/removeCard/"
+        var tt = $(".selected").find('td:first').html();
+        if(tt){
+            $(location).attr('href', cx+tt);
+        }
+    }); 
+</script>
+
+<!--- Add card button click -->
+<script>
+    $(".btnSubmit2").click(function(){
+        var cx = "/addCard/"
+        var tt = document.getElementById("adc").value;
+        console.log(tt.length)
+        if(!tt || tt.length != 16) {
+            $('#topDog').html('<div class="alert alert-danger" role="alert"><strong>Warning!</strong> Better check yourself</div>');
+        } else {
+            $(location).attr('href', cx+tt);
+        }
+        alert(tt);
+    }); 
+</script>
+
+<!--- Style -->
+<style>
+    .boxd {
+        border: 1px solid lightslategray;
+        padding: 15px;
+    }
+    .selected {
+    background-color: lightcoral;
+    color: #FFF;
+    }
+</style>

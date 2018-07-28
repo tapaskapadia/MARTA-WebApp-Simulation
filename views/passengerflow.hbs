@@ -1,0 +1,99 @@
+{{> header }}
+
+<style>
+  form {
+ 	width:28%;
+ 	margin:margin-left;
+ 	position:relative;
+  }
+  table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+
+  td,
+  th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+
+  .table-responsive {
+    max-height: 300px;
+  }
+
+</style>
+
+
+<div class="container">
+<h1>{{title}}</h1>
+
+{{#if errors}}
+    {{#each errors}}
+        <div class="alert alert-danger">
+        {{this.msg}}
+        </div>
+    {{/each}}
+{{/if}}
+
+</div>
+<div class="container">
+<form method="POST" action="/passengerflow">
+
+    <span class="input-group-addon" id="star">Start Time</span>
+    <input type="datetime-local" step="1" name="startTime" aria-describedby="basic-addon3">
+
+    <span class="input-group-addon" id="end">End Time</span>
+
+    <input type="datetime-local" step="1" name="endTime" aria-describedby="basic-addon3">
+
+	<button type="submit" class="update btn-primary">Update</button>
+
+
+</form>
+<br>
+<a class="btn btn-block btn-success" href="/passengerflow" role="button">Reset Filters</a>
+</div>
+<br>
+<br>
+
+
+
+<div class="panel-body table-responsive stationBody">
+	<table id="example" class="table table-bordered" cellspacing="0" width="100%">
+	    <thead>
+	        <tr>
+	            <th>Stop ID</th>
+	            <th>Station Name
+	            </th>
+	            <th># Passengers In</th>
+	            <th># Passengers Out</th>
+	            <th>Flow</th>
+	            <th>Revenue</th>
+	        </tr>
+	    </thead>
+
+
+	    <tbody>
+	        {{#each flow}}
+	            <tr>
+	                <td>{{StopID}}</td>
+	                <td>{{Name}}</td>
+	                <td>{{FlowIn}}</td>
+	                <td>{{FlowOut}}</td>
+	                <td>{{Flow}}</td>
+	                <td>{{Revenue}}</td>
+	            </tr>
+	        {{/each}}
+	    </tbody>
+	</table>
+</div>
+</body>
+
+<script>
+    $(".reset").click(function(){
+    	window.location = "/passengerflow";
+    });
+</script>

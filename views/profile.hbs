@@ -1,0 +1,10 @@
+{{>header}}
+<div class="container">
+    <h2>{{title}}</h2>
+    {{#if ad}}
+    <p><a class="btn btn-lg btn-success" href="/admin" role="button">Do admin stuff</a></p>
+    {{else}}
+    <p><a class="btn btn-lg btn-success" href="/users" role="button">Do stuff</a></p>
+    {{/if}}
+    <p>{{un}}</p>
+</div>

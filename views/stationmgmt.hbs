@@ -1,0 +1,133 @@
+{{> header }} </br>
+<h2>{{title}}</h2>
+</br>
+</br>
+<style>
+  table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  td,
+  th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+
+  .table-responsive {
+    max-height: 300px;
+  }
+
+  .stationBody {
+    min-height: 35vh;
+  }
+</style>
+<div class="panel-body table-responsive stationBody boxd">
+  <table id="stationListingHead" class="table table-bordered" style="margin:0px">
+    <thead>
+      <tr>
+        <th>
+        Station Name
+        <div style="float:right;">
+          <a href="/snasc"><i class="fa fa-sort-asc" aria-hidden="true"></i></a>
+      </div>
+          </th>
+        <th>Stop ID
+          <div style="float:right;">
+            <a href="/sidasc"><i class="fa fa-sort-asc" aria-hidden="true"></i></a>
+            <a href="/siddes"><i class="fa fa-sort-desc" aria-hidden="true"></i></a>
+  </div>
+
+        </th>
+        <th>Fare
+          <div style="float:right;">
+            <a href="/fareasc"><i class="fa fa-sort-asc" aria-hidden="true"></i></a>
+            <a href="/faredes"><i class="fa fa-sort-desc" aria-hidden="true"></i></a>
+  </div>
+
+        </th>
+        <th>Status
+          <div style="float:right;">
+            <a href="/statusasc"><i class="fa fa-sort-asc" aria-hidden="true"></i></a>
+            <a href="/statusdes"><i class="fa fa-sort-desc" aria-hidden="true"></i></a>
+  </div>
+
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#if stations}}
+        {{#each stations}}
+          <tr>
+            <td>{{this.Name}}</td>
+            <td>{{this.StopID}}</td>
+            <td>${{this.EnterFare}}</td>
+            <td>
+              {{#if this.ClosedStatus}} Closed
+              {{else}}Open
+              {{/if}}
+            </td>
+        {{/each}}
+      {{/if}}
+    </tbody>
+  </table>
+</div>
+</br>
+</br>
+
+
+
+
+<div>
+<a class="float-left btn btn-lg btn-success" href="/createstation" role="button">Create New Station</a>
+
+<form class="spacer" id="form" action="/station" method="post">
+<input type="hidden"></input>
+  <button type="submit" class="float-right btn btn-lg btn-success">View Station</button>
+</form>
+</div>
+
+
+
+
+<script>
+
+  $("#stationListingHead tr:gt(0)").click(function() {
+    $(this).addClass('selected').siblings().removeClass('selected');
+    var value = $(this).find('td:first').html();
+  });
+</script>
+
+
+<script>
+$("#form").submit( function(eventObj) {
+  var stopRowID = $(".selected").children('td').slice(1, 2).html();
+
+  if (stopRowID) {
+    $('<input />').attr('type', 'hidden')
+        .attr('name', "stopID")
+        .attr('value', stopRowID)
+        .appendTo('#form');
+    return true;
+  }
+    alert("Please select a station to view");
+    return false;
+
+  });
+
+    </script>
+
+
+<style>
+  .boxd {
+    border: 1px solid lightslategray;
+    padding: 15px;
+  }
+
+  .selected {
+    background-color: lightcoral;
+    color: #FFF;
+  }
+</style>

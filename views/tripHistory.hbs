@@ -1,0 +1,195 @@
+{{> header }}
+</br>
+
+<!--- Potential Error Catching Div -->
+<div id="topDog">
+</div>
+
+<!--- Table -->
+<div class="boxd">
+<div  class="panel-body table-responsive stationBody">
+<table id="tab" class="table table-borded">
+  <thead>
+    <tr>
+      <th onclick="sortTable(0)">Time
+        <a ><i class="fa fa-sort-desc" aria-hidden="true"></i></a>
+      </th>
+      <th>Source</th>
+      <th>Destination</th>
+      <th>Fare Paid</th>
+      <th>Card Number</th>
+    </tr>
+  </thead>
+  <tbody>
+      {{#if bloop}}
+      {{#each bloop}}
+      <tr>
+      <td>{{this.StartTime}}</td>
+      <td>{{this.Name}}</td>
+      <td>{{this.ename}}</td>
+      <td>{{this.Tripfare}}</td>
+      <td>{{this.BreezecardNum}}</td>
+      {{/each}}
+      {{/if}}
+      </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br>
+
+<!--- Start Time Input -->
+<div class="row">
+    <div class="col-lg-offset-3 col-lg-6">
+        <div class="input-group">
+            <span class="input-group-addon" id="star">Start Time</span>
+            <input type="datetime-local" step="1" id="strr" aria-describedby="basic-addon3">
+        </div>
+    </div>
+</div>
+<br>
+
+<!--- End Time Input -->
+<div class="row">
+    <div class="col-lg-offset-3 col-lg-6">
+        <div class="input-group">
+            <span class="input-group-addon" id="en">End Time </span>
+            <input type="datetime-local" step="1" id="endd" aria-describedby="basic-addon4">
+        </div>
+    </div>
+</div>
+<br>
+<div class="row">
+<!--- Add Update Button -->
+<button class="btn btn-secondary adv" type="button">Update</button>
+<div class="divider">
+    </div>
+<button class="btn btn-secondary adv2" type="button">Reset</button>
+</div>
+<br>
+
+
+<!--- Add Update button click -->
+<script>
+    $(".adv").click(function(){
+        var cx = "/viewTripHistory";
+        var ss = document.getElementById("strr").value;
+        var ee = document.getElementById("endd").value;
+        if(!ss && !ee) {
+             $(location).attr('href',cx);
+        } else if(!ss){
+            $(location).attr('href', cx+"/end/"+ee);
+        }else if(!ee){
+            $(location).attr('href', cx+"/start/"+ss);
+        } else {
+            $(location).attr('href', cx+"/both/"+ss+"/"+ee);
+        }
+    }); 
+</script>
+<!--- Add View trip History button click -->
+<script>
+    $(".adv2").click(function(){
+        var cx = "/viewTripHistory";
+        $(location).attr('href',cx);
+    }); 
+</script>
+
+
+<!--- Style -->
+<style>
+    .boxd {
+        border: 1px solid lightslategray;
+        padding: 15px;
+    }
+    .selected {
+    background-color: lightcoral;
+    color: #FFF;
+    }   
+</style>
+
+<!--- Style for the table -->
+<style>
+  table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  td,
+  th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+
+  .table-responsive {
+    max-height: 300px;
+  }
+
+  .stationBody {
+    min-height: 35vh;
+  }
+  .divider{
+    width:5px;
+    height:auto;
+    display:inline-block;
+}
+</style>
+
+
+<script>
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("tab");
+  switching = true;
+  // Set the sorting direction to ascending:
+  dir = "asc"; 
+  /* Make a loop that will continue until
+  no switching has been done: */
+  while (switching) {
+    // Start by saying: no switching is done:
+    switching = false;
+    rows = table.getElementsByTagName("TR");
+    /* Loop through all table rows (except the
+    first, which contains table headers): */
+    for (i = 1; i < (rows.length -1 ); i++) {
+      // Start by saying there should be no switching:
+      shouldSwitch = false;
+      /* Get the two elements you want to compare,
+      one from current row and one from the next: */
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      /* Check if the two rows should switch place,
+      based on the direction, asc or desc: */
+      if (dir == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          // If so, mark as a switch and break the loop:
+          shouldSwitch= true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+          // If so, mark as a switch and break the loop:
+          shouldSwitch= true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+      /* If a switch has been marked, make the switch
+      and mark that a switch has been done: */
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      // Each time a switch is done, increase this count by 1:
+      switchcount ++; 
+    } else {
+      /* If no switching has been done AND the direction is "asc",
+      set the direction to "desc" and run the while loop again. */
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+</script>

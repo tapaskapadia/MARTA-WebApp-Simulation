@@ -1,0 +1,77 @@
+{{> header }}
+
+<h1>{{title}}</h1>
+
+{{#if errorsInd}}
+        <div class="alert alert-danger">
+        {{errorsInd}}
+        </div>
+{{/if}}
+{{#if errors}}
+    {{#each errors}}
+        <div class="alert alert-danger">
+        {{this.msg}}
+        </div>
+    {{/each}}
+{{/if}}
+<div class="container boxd">
+<form method="POST" action="/createstation">
+
+    <div class="form-group">
+        <label for="stationName">Station Name</label>
+        <input type="text" name="stationName" class="form-control"  placeholder="Station Name">
+    </div>
+
+    <div class="form-group">
+        <label for="stopID">Stop ID</label>
+        <input type="text" name="stopID" class="form-control"  placeholder="Stop ID">
+    </div>
+
+    <div class="form-group">
+    <label for="entryFare">Entry Fare</label>
+<div class="input-group">
+    <span class="input-group-addon">$</span>
+    <input type="number" name="entryFare" value="0.00" step="0.01" class="form-control" />
+</div>
+</div>
+
+
+    <div class="form-group">
+
+        <div class="form-group row">
+    <label class="form-check-label">
+    <input class="form-check-input" type="radio" name="stationChoice" id="exampleRadios1" value="busChoice" checked>
+    Bus Station
+    </label>
+  </div>
+    <label style="font-size:0.90rem;">
+      Nearest Intersection
+    <input type="text" name="nearestIntersection" class="form-control"  placeholder="Nearest Intersection">
+    </label>
+
+    <div class="form-group row">
+        <label class="form-check-label">
+    <input class="form-check-input" type="radio" name="stationChoice" id="exampleRadios2" value="trainChoice">
+    Train Station
+    </label>
+</div>
+  </div>
+
+<div class="form-group">
+    <label class="form-check-label">
+      <input name="stationStatus" type="checkbox" value="open" checked>
+      Open Station
+</label>
+</div>
+
+
+    <button type="submit" class="btn btn-primary">Create Station</button>
+</form>
+</div>
+{{> footer-end }}
+<style>
+  .boxd {
+    border: 1px solid lightslategray;
+    padding: 25px;
+  }
+</style>

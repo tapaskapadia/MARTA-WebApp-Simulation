@@ -1,0 +1,230 @@
+{{> header }} </br>
+<h2>{{title}}</h2>
+<style>
+  table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  td,
+  th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+
+  .table-responsive {
+    max-height: 300px;
+  }
+
+  .stationBody {
+    min-height: 35vh;
+  }
+</style>
+
+{{#if errorsInd}}
+        <div class="alert alert-danger">
+        {{errorsInd}}
+        </div>
+{{/if}}
+
+<div class="container">
+  <span>Search/Filter</span>
+  </br>
+  </br>
+  {{#if errors}}
+    {{#each errors}}
+      <div class="alert alert-danger">
+        {{this.msg}}
+      </div>
+    {{/each}}
+  {{/if}}
+  <div class="container">
+    <form method="POST" action="/breezecardmgmt">
+      <div class="float-left col-md-8">
+        <div class="form-group">
+          <label for="owner">Owner</label>
+          <input type="text" name="owner" class="form-control span6 input-large" value="{{owner}}" placeholder="Owner">
+        </div>
+
+        <div class="form-group">
+          <label for="bcardnum">Card Number</label>
+          <input type="text" name="bcardnum" class="form-control" value="{{cardnum}}" placeholder="Card Number">
+        </div>
+
+        <div class="form-group">
+          <span>Value between<span>
+    <div class="row">
+<div class="input-group col-md-5">
+  <span class="input-group-addon">$</span>
+          <input type="number" name="startFare" value="{{startFare}}" step="0.01" class="form-control" />
+        </div>
+        and
+        <div class="input-group col-md-5">
+          <span class="input-group-addon">$</span>
+          <input type="number" name="endFare" value="{{endFare}}" step="0.01" class="form-control" />
+        </div>
+      </div>
+  </div>
+
+
+
+</div>
+
+<div class="float-right col-md-4">
+  <div class="form-group" style="font-size:1.2rem;">
+
+    {{#if showSuspended}}
+      <input name="suspendedCards" type="checkbox" value="showSuspended" checked>
+    {{else}}
+    <input name="suspendedCards" type="checkbox" value="showSuspended">
+    {{/if}}
+
+
+    <label class="form-check-label">
+        Show Suspended Cards
+    </label>
+  </div>
+  <div class="form-group">
+    <button type="submit" class="update btn btn-block btn-secondary">Update</button>
+  </div>
+  </form>
+
+  <a class="btn btn-block btn-success" href="/breezecardmgmt" role="button">Reset Filters</a>
+
+</div>
+
+</div>
+
+
+<div class="panel-body boxd table-responsive stationBody">
+  <table id="cardListing" class="table table-bordered" style="margin:0px">
+    <thead>
+      <tr>
+
+        <th>Card #</th>
+
+        <th>Value</th>
+
+        <th>Owner</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      {{#if validcards}}
+        {{#each validcards}}
+          <tr>
+            <td>{{this.BreezecardNum}}</td>
+            <td>{{this.Value}}</td>
+
+            <td>
+                {{this.BelongsTo}}
+            </td>
+          </tr>
+        {{/each}}
+      {{/if}}
+
+      {{#if notvalidcards}}
+        {{#each notvalidcards}}
+          <tr>
+            <td>{{this.BreezecardNum}}</td>
+            <td>{{this.Value}}</td>
+
+            <td>
+                <b>Suspended</b>
+            </td>
+          </tr>
+        {{/each}}
+      {{/if}}
+
+
+    </tbody>
+  </table>
+</div>
+</br>
+</br>
+
+
+<div>
+
+  <form class="spacer" id="form" action="/setvalue" method="post">
+    <input type="hidden"></input>
+
+    <input type="text" name="Value" class="form-control"  placeholder="20.00">
+
+    <button type="submit" class="float-right btn btn-lg btn-success">Set Value of Selected Card</button>
+  </form>
+</div>
+
+  <form class="spacer" id="transfer" action="/transferselected" method="post">
+    <input type="hidden" id="hiddeninput"></input>
+
+    <input type="text" name="Person" class="form-control"  placeholder="chong_guo">
+
+    <button type="submit" class="float-right btn btn-lg btn-success">Transfer Selected Card</button>
+  </form>
+
+
+
+
+
+
+
+<script>
+  $("#cardListing tr:gt(0)").click(function() {
+    $(this).addClass('selected').siblings().removeClass('selected');
+    var value = $(this).find('td:first').html();
+  });
+</script>
+
+
+
+
+<script>
+  $("#form").submit(function(eventObj) {
+    var breeze = $(".selected").children('td').slice(0, 1).html();
+
+    if (breeze) {
+      $('<input />').attr('type', 'hidden')
+        .attr('name', "bcn")
+        .attr('value', breeze)
+        .appendTo('#form');
+      return true;
+    }
+    alert("Please select a card to add value to");
+    return false;
+
+  });
+</script>
+
+<script>
+  $("#transfer").submit(function(eventObj) {
+    var breeze = $(".selected").children('td').slice(0, 1).html();
+
+    if (breeze) {
+      $('<input />').attr('id', 'hiddeninput')
+        .attr('name', "bcn")
+        .attr('value', breeze)
+        .appendTo('#transfer');
+        
+      return true;
+    }
+    alert("Please select a card to transfer");
+    return false;
+
+  });
+</script>
+
+
+<style>
+  .boxd {
+    border: 1px solid lightslategray;
+    padding: 15px;
+  }
+
+  .selected {
+    background-color: lightcoral;
+    color: #FFF;
+  }
+</style>

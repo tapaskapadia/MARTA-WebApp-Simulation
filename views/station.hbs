@@ -1,0 +1,89 @@
+{{> header }} </br>
+<h3>{{title}}</h3>
+</br>
+
+<style>
+  .move-left {
+    width: auto;
+    box-shadow: none;
+  }
+</style>
+<div class="container boxd">
+  {{#if errors}}
+      {{#each errors}}
+          <div class="alert alert-danger">
+          {{this.msg}}
+          </div>
+      {{/each}}
+  {{/if}}
+  <div>
+    <span class="float-left">Station Name : <b>{{stationName}}</b></span>
+    <span class="float-right" style="color:orange;">Stop {{stopID}}</span>
+  </div>
+  </br>
+  </br>
+
+  <form method="POST" action="/updatestation">
+
+    <input name="stopID" type=hidden value={{stopID}}></input>
+
+    <div class="form-group">
+      <label for="entryFare">Entry Fare</label>
+      <div class="input-group">
+        <span class="input-group-addon float-left">$</span>
+        <input type="number" name="entryFare" value= {{enterFare}} step="0.01" class="form-control" />
+      </div>
+    </div>
+
+
+    <div class="input" style="font-size:1rem;">
+      <span>Nearest Intersection<span>
+
+
+{{#if isTrain}}
+
+<span class="float-right" style="color:gray;">Not available for train stations</span>
+
+      {{else}}
+      {{#if hasIntersection}}
+<span class="float-right">{{Intersection}}</span>
+      {{else}}
+        <label class="float-right">
+<input type="text" name="nearestIntersection" class="form-control"  placeholder="Nearest Intersection">
+</label>
+{{/if}}
+
+        {{/if}}
+    </div>
+
+
+    </br>
+
+    <div class="form-group" style="font-size:1.2rem;">
+      {{#if closedStatus}}
+      <input name="stationStatus" type="checkbox" value="open">
+      {{else}}
+      <input name="stationStatus" type="checkbox" value="open" checked>
+      {{/if}}
+
+
+      <label class="form-check-label">
+          Open Station
+      </label>
+
+
+    </div>
+
+
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+
+
+</div>
+<style>
+  .boxd {
+    border: 1px solid lightslategray;
+    padding: 15px;
+  }
+</style>

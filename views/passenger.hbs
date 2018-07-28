@@ -1,0 +1,123 @@
+{{>header}}
+      <div id ="errors">
+      </div>
+      <div class="boxd">
+      <div class="row">
+        <select id="bcard">
+              <option disabled selected value>Select a Breezecard</option>
+               {{#if bc}} {{#each bc}}
+              <option value={{this.Value}}>{{this.BreezecardNum}}</option>
+              {{/each}} {{/if}}
+        </select>
+        <p><a class="btn btn-lg btn-primary" href="/manageCards" role="button">Manage Cards</a></p>
+
+        </div>
+        <br>
+       {{#if breeze}}
+<p>{{breeze}}</p>
+       {{/if}}
+        <div id="card" class="boxd">
+          <p>Value</p>
+        </div>
+        <br>
+        <div class="row">
+        <select id="sstation">
+        <option disabled selected value>Select a Start Station</option>
+              {{#if stationLock}}
+              {{#each stationLock}}
+              <option selected value={{this.IsTrain}}>{{this.Name}} - ${{this.EnterFare}}</option>
+              {{/each}} 
+              {{else}}
+              {{#if choo}} {{#each choo}}
+              <option value={{this.IsTrain}}>{{this.Name}} - ${{this.EnterFare}}</option>
+              {{/each}} {{/if}}
+              {{/if}}
+        </select>
+        {{#if stationLock}}
+        <p class="text-success">Trip in Progress</p>
+        {{else}}
+        <button class="btn btn-secondary stb" type="button">Start Trip</button>
+        {{/if}}
+        </div>
+        </br>
+        <div class="row">
+        <select id="estation">
+        <option disabled selected value>Select an End Station</option>
+              {{#if choo}} {{#each choo}}
+              <option value={{this.IsTrain}}>{{this.Name}}</option>
+              {{/each}} {{/if}}
+        </select>
+        <button class="btn btn-secondary adv" type="button">End Trip</button>
+        </div>
+      <br>
+      <div>
+        <p><a class="btn btn-lg btn-info" href="/viewTripHistory" role="button">viewTripHistory</a></p>
+      </div>
+      </div>
+      
+      <script  type="text/javascript">
+          $("#bcard").change(function() {
+          var val = $(this).val();
+          $("#card").html("$"+ val);
+        });
+      </script>
+
+{{#unless stationLock}}
+      <script>
+    $(".stb").click(function(){
+        var cx = "/startTrip";
+        var bsel = $("#bcard option:selected").text();
+        var ssel = $("#sstation option:selected").text();
+        var esel = $("#estation option:selected").text();
+        var typ = $("#sstation").val(); 
+        bsel = bsel.toString();
+        ssel = ssel.toString();
+        esel = esel.toString();
+        if(bsel === "Select a Breezecard") {
+          $('#errors').html('<div class="alert alert-danger" role="alert"><strong>Warning!</strong> Select a Breeze Card</div>');
+        } else if(ssel === "Select a Start Station") {
+          $('#errors').html('<div class="alert alert-danger" role="alert"><strong>Warning!</strong> Select a Start Station</div>');
+        } else if (esel !== "Select an End Station") {
+          $('#errors').html('<div class="alert alert-danger" role="alert"><strong>Warning!</strong> Start a Trip Before Selecting an End Station</div>');
+        } else {
+          $(location).attr('href', cx+"/"+bsel+"/"+ssel+"/"+typ);
+        }
+        //$(location).attr('href', cx+"/both/"+ss+"/"+ee);
+    }); 
+    </script>
+{{/unless}}
+
+{{#if stationLock}}
+<script>
+    $(".adv").click(function(){
+        var cx = "/endTrip";
+        var esel = $("#estation option:selected").text();
+        esel = esel.toString();
+        var typ = $("#estation").val();
+        alert(esel);
+        if (esel === "Select an End Station") {
+          $('#errors').html('<div class="alert alert-danger" role="alert"><strong>Warning!</strong> Select an End Station</div>');
+        } else {
+          $(location).attr('href', cx+"/"+esel+"/"+typ);
+        }
+    }); 
+</script>
+{{/if}}
+      <script  type="text/javascript">
+          $("#sstation").change(function() {
+          var val = $(this).val();
+          var x;
+          if (val === "0") {
+            x = "<option disabled selected value>Select an End Station</option>{{#each choo}}{{#unless this.IsTrain}}<option value={{this.Value}}>{{this.Name}}</option> {{/unless}} {{/each}}";
+          } else {
+            x = "<option disabled selected value>Select an End Station</option>{{#each choo}}{{#if this.IsTrain}}<option value={{this.Value}}>{{this.Name}}</option> {{/if}} {{/each}}";
+          }
+          $("#estation").html(x);
+        });
+      </script>
+<style>
+   .boxd {
+        border: 1px solid lightslategray;
+        padding: 25px;
+    }
+</style>
